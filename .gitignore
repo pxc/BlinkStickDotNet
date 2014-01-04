@@ -1,0 +1,28 @@
+# Files to exclude from git
+#
+# Based on the example at
+# http://itstuff.jasonsmart.id.au/2010/10/git-and-visual-studio-gitignore-and-git.html
+# and some related Googling.
+
+# User solution and project settings
+*.user
+*.suo
+*.sln.cache 
+
+# Build output
+[bB]in
+[Oo]bj
+
+# Test files
+TestResults
+
+# Debug and Release folders
+Debug
+Release
+
+# Misc files anywhere
+[Tt]humbs.db
+StyleCop.Cache
+
+# Misc files specific
+/_ReSharper.*

@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlinkStickDotNet", "BlinkStickDotNet\BlinkStickDotNet.csproj", "{68529065-7EA4-44D2-BA5C-AAB5EEB628D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlinkStickDotNetTest", "BlinkStickDotNetTest\BlinkStickDotNetTest.csproj", "{A723A021-5E16-45C4-AA5E-DB8E290DFCEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlinkStick", "BlinkStick\BlinkStick.csproj", "{25FA1001-5217-4838-8B21-96D16B4AF625}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{68529065-7EA4-44D2-BA5C-AAB5EEB628D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68529065-7EA4-44D2-BA5C-AAB5EEB628D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68529065-7EA4-44D2-BA5C-AAB5EEB628D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68529065-7EA4-44D2-BA5C-AAB5EEB628D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A723A021-5E16-45C4-AA5E-DB8E290DFCEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A723A021-5E16-45C4-AA5E-DB8E290DFCEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A723A021-5E16-45C4-AA5E-DB8E290DFCEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A723A021-5E16-45C4-AA5E-DB8E290DFCEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25FA1001-5217-4838-8B21-96D16B4AF625}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25FA1001-5217-4838-8B21-96D16B4AF625}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25FA1001-5217-4838-8B21-96D16B4AF625}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25FA1001-5217-4838-8B21-96D16B4AF625}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
