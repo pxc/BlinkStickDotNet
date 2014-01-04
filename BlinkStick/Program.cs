@@ -122,9 +122,9 @@ namespace BlinkStickApp
 
         private static void Test(BlinkStick stick)
         {
-            stick.Blink(Color.Red, 1000);
-            stick.Blink(Color.Blue, 1000);
-            stick.Blink(Color.Green, 1000);
+            stick.BlinkWait(Color.Red, 1000);
+            stick.BlinkWait(Color.Blue, 1000);
+            stick.BlinkWait(Color.Green, 1000);
         }
 
         private static void Blink(BlinkStick stick, Color color, int duration)
