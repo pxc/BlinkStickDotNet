@@ -8,6 +8,7 @@ namespace BlinkStickApp
     /// </summary>
     /// <remarks>
     /// Adapted from http://www.codeproject.com/Articles/3111/C-NET-Command-Line-Arguments-Parser
+    /// MIT: http://pxc.mit-license.org/2014/
     /// </remarks>
     public class Arguments
     {

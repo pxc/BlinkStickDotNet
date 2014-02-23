@@ -24,3 +24,4 @@ again at the end of the blink)
 * Memory monitor
 * Mouse-over colour changer
 
+MIT: http://pxc.mit-license.org/2014/
