@@ -21,9 +21,7 @@ namespace BlinkStickDotNet.Tools
 
             foreach (MorseCodeElement morseCodeElement in encodedMessage)
             {
-                Color colorToFlash =
-                    morseCodeElement == MorseCodeElement.Dash || morseCodeElement == MorseCodeElement.Dot
-                    ? color : Color.Black;
+                Color colorToFlash = MorseCode.IsGap[morseCodeElement] ? Color.Black : color;
 
                 int duration = MorseCode.RelativeLengths[morseCodeElement] * dotLength;
 

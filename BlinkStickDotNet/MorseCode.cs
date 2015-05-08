@@ -19,13 +19,22 @@ namespace BlinkStickDotNet
 
     internal class MorseCode
     {
-        public static IReadOnlyDictionary<MorseCodeElement, int> RelativeLengths = new Dictionary<MorseCodeElement, int>()
+        public static IReadOnlyDictionary<MorseCodeElement, int> RelativeLengths = new Dictionary<MorseCodeElement, int>
         {
             { MorseCodeElement.Dot, 1 },
             { MorseCodeElement.Dash, 3 },
             { MorseCodeElement.InterElementGap, 1 },
             { MorseCodeElement.InterLetterGap, 3 },
             { MorseCodeElement.InterWordGap, 7 }
+        };
+
+        public static IReadOnlyDictionary<MorseCodeElement, bool> IsGap = new Dictionary<MorseCodeElement, bool>
+        {
+            { MorseCodeElement.Dot, false },
+            { MorseCodeElement.Dash, false },
+            { MorseCodeElement.InterElementGap, true },
+            { MorseCodeElement.InterLetterGap, true },
+            { MorseCodeElement.InterWordGap, true }
         };
 
         /// <summary>
@@ -136,27 +145,38 @@ namespace BlinkStickDotNet
                 return Enumerable.Empty<MorseCodeElement>();
             }
 
+            return EncodeCharacters(message);
+        }
+
+        private static IEnumerable<MorseCodeElement> EncodeCharacters(string message)
+        {
             var encodedMessage = new List<MorseCodeElement>();
             bool isAtStartOfWord = true;
             foreach (char c in message.ToUpper(CultureInfo.CurrentCulture))
             {
-                if (Encoding.ContainsKey(c))
-                {
-                    if (!isAtStartOfWord)
-                    {
-                        encodedMessage.Add(MorseCodeElement.InterLetterGap);
-                    }
-                    encodedMessage.AddRange(Encoding[c]);
-                    isAtStartOfWord = false;
-                }
-                else if (c == ' ')
-                {
-                    encodedMessage.Add(MorseCodeElement.InterWordGap);
-                    isAtStartOfWord = true;
-                }
+                isAtStartOfWord = EncodeCharacter(c, isAtStartOfWord, encodedMessage);
             }
 
             return encodedMessage;
+        }
+
+        private static bool EncodeCharacter(char c, bool isAtStartOfWord, List<MorseCodeElement> encodedMessage)
+        {
+            if (Encoding.ContainsKey(c))
+            {
+                if (!isAtStartOfWord)
+                {
+                    encodedMessage.Add(MorseCodeElement.InterLetterGap);
+                }
+                encodedMessage.AddRange(Encoding[c]);
+                isAtStartOfWord = false;
+            }
+            else if (c == ' ')
+            {
+                encodedMessage.Add(MorseCodeElement.InterWordGap);
+                isAtStartOfWord = true;
+            }
+            return isAtStartOfWord;
         }
 
         static MorseCode()
@@ -164,43 +184,62 @@ namespace BlinkStickDotNet
             BuildEncodingFromEncodingSimple();
         }
 
+        /// <summary>
+        /// Build the thing that's easy for computers to work with
+        /// (<see cref="Encoding"/>) from the thing that's easy for
+        /// humans to work with (<see cref="EncodingSimple"/>).
+        /// </summary>
         private static void BuildEncodingFromEncodingSimple()
         {
             var d = new Dictionary<char, IEnumerable<MorseCodeElement>>();
 
             foreach (KeyValuePair<char, string> keyValuePair in EncodingSimple)
             {
-                var elements = new List<MorseCodeElement>();
-
-                char[] value = keyValuePair.Value.ToCharArray();
-
-                for (int i = 0; i < value.Length; i++)
-                {
-                    if (i > 0)
-                    {
-                        elements.Add(MorseCodeElement.InterElementGap);
-                    }
-
-                    switch (value[i])
-                    {
-                        case '.':
-                            elements.Add(MorseCodeElement.Dot);
-                            break;
-
-                        case '-':
-                            elements.Add(MorseCodeElement.Dash);
-                            break;
-
-                        default:
-                            string msg = string.Format("Unknown character {0}", value[i]);
-                            throw new NotSupportedException(msg);
-                    }
-                }
-
-                d.Add(keyValuePair.Key, elements);
+                AddEncodingToDictionary(keyValuePair, d);
             }
 
             Encoding = d;
+        }
+
+        private static void AddEncodingToDictionary(KeyValuePair<char, string> keyValuePair, IDictionary<char, IEnumerable<MorseCodeElement>> d)
+        {
+            IEnumerable<MorseCodeElement> elements = GetMorseCodeElements(keyValuePair.Value.ToCharArray());
+            d.Add(keyValuePair.Key, elements);
+        }
+
+        private static IEnumerable<MorseCodeElement> GetMorseCodeElements(IList<char> value)
+        {
+            var elements = new List<MorseCodeElement>();
+
+            for (int i = 0; i < value.Count; i++)
+            {
+                AddElementsAtIndex(value[i], i, elements);
+            }
+
+            return elements;
+        }
+
+        private static void AddElementsAtIndex(char value, int i, ICollection<MorseCodeElement> elements)
+        {
+            if (i > 0)
+            {
+                elements.Add(MorseCodeElement.InterElementGap);
+            }
+
+            switch (value)
+            {
+                case '.':
+                    elements.Add(MorseCodeElement.Dot);
+                    break;
+
+                case '-':
+                    elements.Add(MorseCodeElement.Dash);
+                    break;
+
+                default:
+                    string msg = string.Format("Unknown character {0}", value);
+                    throw new NotSupportedException(msg);
+            }
         }
     }
 }

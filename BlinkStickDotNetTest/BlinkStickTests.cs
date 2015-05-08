@@ -35,6 +35,7 @@ namespace BlinkStickDotNetTest
                 stick.Blink(Color.White, 300);
                 Thread.Sleep(200);
                 result = stick.LedColor;
+                Thread.Sleep(300);
             }
 
             Assert.That(result, Is.EqualTo(expectedResult).Using(s_saneColorComparer));
@@ -71,7 +72,6 @@ namespace BlinkStickDotNetTest
 
             Assert.That(result, Is.EqualTo(expectedResult).Using(s_saneColorComparer));
         }
-
 
         private static readonly SaneColorComparer s_saneColorComparer = new SaneColorComparer();
 

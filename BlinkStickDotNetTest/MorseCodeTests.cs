@@ -17,7 +17,7 @@ namespace BlinkStickDotNetTest
         [Test]
         public static void TestEncodingSimpleAreAllDifferentApartFromKnownCollisionsExpectTrue()
         {
-            var knownCollisions = new[] { 'æ', 'ą', 'å', 'ĉ', 'ć', 'ł', 'đ', 'ę', 'ĥ', 'ń', 'ø', 'ó', 'ŭ', };
+            var knownCollisions = new[] { 'æ', 'ą', 'å', 'ĉ', 'ć', 'ł', 'đ', 'ę', 'ĥ', 'ń', 'ø', 'ó', 'ŭ' };
             var valuesExceptKnownCollisions = MorseCode.EncodingSimple.Where(kvp => !knownCollisions.Contains(kvp.Key)).Select(kvp => kvp.Value);
 
             foreach (string collision in valuesExceptKnownCollisions.GroupBy(v => v).Where(g => g.Count() > 1).Select(g => g.Key).ToArray())
@@ -37,7 +37,7 @@ namespace BlinkStickDotNetTest
         [Test]
         public static void TestEncodingSimpleContainsOnlyDotsAndDashesExpectTrue()
         {
-            char[] dotdash = new[] { '.', '-' };
+            var dotdash = new[] { '.', '-' };
             Assert.That(MorseCode.EncodingSimple.Values.Select(es => es.Trim(dotdash)), Is.All.EqualTo(string.Empty));
         }
 
@@ -132,7 +132,6 @@ namespace BlinkStickDotNetTest
                 string actual = i <= result.Length - 1 ? result[i].ToString() : "-";
                 Console.WriteLine("{0:G2} {1} {2}", i, expected, actual);
             }
-
 
             Assert.That(MorseCode.Encode("YES SIR"), Is.EquivalentTo(expectedResult));
         }

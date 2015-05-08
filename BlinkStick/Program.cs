@@ -21,103 +21,128 @@ namespace BlinkStickApp
 
             using (var stick = new BlinkStick())
             {
-                // handle Ctrl+C
-                Console.CancelKeyPress += (obj, eventArgs) =>
-                {
-                    s_userWantsToQuit = true;
+                HandleCtrlC();
+                ProcessVerbosity(parsedArguments, stick);
+                ProcessDebug(parsedArguments, stick);
+                ProcessBrightness(parsedArguments, stick);
+                Color color = ProcessColor(parsedArguments);
+                int? duration = ProcessDuration(parsedArguments);
+                ProcessTools(parsedArguments, stick, color, duration);
+            }
+        }
 
-                    // make execution continue after this delegate completes
-                    eventArgs.Cancel = true;
-                };
+        private static void ProcessTools(Arguments parsedArguments, BlinkStick stick, Color color, int? duration)
+        {
+            if (parsedArguments.Has("test"))
+            {
+                Test(stick);
+            }
+            else if (parsedArguments.Has("random"))
+            {
+                RandomColors.Run(stick, KeepGoing);
+            }
+            else if (parsedArguments.Has("blink"))
+            {
+                const int defaultBlinkDuration = 1000;
+                Blink(stick, color, duration ?? defaultBlinkDuration);
+            }
+            else if (parsedArguments.Has("mouseover"))
+            {
+                MouseOverColorTracker.Run(stick, KeepGoing);
+            }
+            else if (parsedArguments.Has("cpu"))
+            {
+                CpuMonitor.Run(stick, KeepGoing);
+            }
+            else if (parsedArguments.Has("memory"))
+            {
+                MemoryMonitor.Run(stick, KeepGoing);
+            }
+            else if (parsedArguments.Has("morse"))
+            {
+                string message = parsedArguments["morse"];
 
-                // verbosity
-                if (parsedArguments.Has("verbose"))
-                {
-                    stick.Verbosity = Verbosity.Verbose;
-                }
+                const int defaultDotLength = 200;
 
-                if (parsedArguments.Has("debug"))
-                {
-                    stick.Verbosity = Verbosity.Debug;
-                }
+                MorseCodeFlasher.Run(stick, message, color, duration ?? defaultDotLength);
+            }
+            else
+            {
+                DisplayUsage();
+            }
+        }
 
-                // brightness
-                if (parsedArguments.Has("brightness"))
+        private static int? ProcessDuration(Arguments parsedArguments)
+        {
+            int? duration = null;
+            if (parsedArguments.Has("duration"))
+            {
+                int parsedDuration;
+                if (int.TryParse(parsedArguments["duration"], out parsedDuration))
                 {
-                    string rawBrightness = parsedArguments["brightness"];
-
-                    BlinkStick.Brightness brightness;
-                    if (Enum.TryParse(rawBrightness, true, out brightness))
-                    {
-                        stick.SetBrightnessLimit(brightness);
-                    }
-                }
-
-                // color
-                Color color;
-                if (parsedArguments.Has("color"))
-                {
-                    color = ColorTranslator.FromHtml(parsedArguments["color"]);                    
-                }
-                else
-                {
-                    color = Color.White;
-                }
-
-                // duration
-                int? duration = null;
-                if (parsedArguments.Has("duration"))
-                {
-                    int parsedDuration;
-                    if (int.TryParse(parsedArguments["duration"], out parsedDuration))
-                    {
-                        duration = parsedDuration;
-                    }
-                    else
-                    {
-                        DisplayUsage();
-                    }
-                }
-
-                // tools
-                if (parsedArguments.Has("test"))
-                {
-                    Test(stick);
-                }
-                else if (parsedArguments.Has("random"))
-                {
-                    RandomColors.Run(stick, KeepGoing);
-                }
-                else if (parsedArguments.Has("blink"))
-                {
-                    const int defaultBlinkDuration = 1000;
-                    Blink(stick, color, duration ?? defaultBlinkDuration);
-                }
-                else if (parsedArguments.Has("mouseover"))
-                {
-                    MouseOverColorTracker.Run(stick, KeepGoing);
-                }
-                else if (parsedArguments.Has("cpu"))
-                {
-                    CpuMonitor.Run(stick, KeepGoing);
-                }
-                else if (parsedArguments.Has("memory"))
-                {
-                    MemoryMonitor.Run(stick, KeepGoing);
-                }
-                else if (parsedArguments.Has("morse"))
-                {
-                    string message = parsedArguments["morse"];
-
-                    const int defaultDotLength = 200;
-
-                    MorseCodeFlasher.Run(stick, message, color, duration ?? defaultDotLength);
+                    duration = parsedDuration;
                 }
                 else
                 {
                     DisplayUsage();
                 }
             }
+            return duration;
+        }
+
+        private static Color ProcessColor(Arguments parsedArguments)
+        {
+            Color color;
+            if (parsedArguments.Has("color"))
+            {
+                color = ColorTranslator.FromHtml(parsedArguments["color"]);
+            }
+            else
+            {
+                color = Color.White;
+            }
+            return color;
+        }
+
+        private static void ProcessBrightness(Arguments parsedArguments, BlinkStick stick)
+        {
+            if (parsedArguments.Has("brightness"))
+            {
+                string rawBrightness = parsedArguments["brightness"];
+
+                BlinkStick.Brightness brightness;
+                if (Enum.TryParse(rawBrightness, true, out brightness))
+                {
+                    stick.SetBrightnessLimit(brightness);
+                }
+            }
+        }
+
+        private static void ProcessDebug(Arguments parsedArguments, BlinkStick stick)
+        {
+            if (parsedArguments.Has("debug"))
+            {
+                stick.Verbosity = Verbosity.Debug;
+            }
+        }
+
+        private static void ProcessVerbosity(Arguments parsedArguments, BlinkStick stick)
+        {
+            if (parsedArguments.Has("verbose"))
+            {
+                stick.Verbosity = Verbosity.Verbose;
+            }
+        }
+
+        private static void HandleCtrlC()
+        {
+            Console.CancelKeyPress += (obj, eventArgs) =>
+            {
+                s_userWantsToQuit = true;
+
+                // make execution continue after this delegate completes
+                eventArgs.Cancel = true;
+            };
         }
 
         private static void Test(BlinkStick stick)
