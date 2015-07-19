@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace BlinkStickApp
@@ -68,7 +69,11 @@ namespace BlinkStickApp
                     // With no value, set it to true.
                     parameter = ParseThreeParts(parameter, parts, remover);
                     break;
+
+                default:
+                    throw new ArgumentException("Should have 1, 2 or 3 parts", "parts");
             }
+
             return parameter;
         }
 
