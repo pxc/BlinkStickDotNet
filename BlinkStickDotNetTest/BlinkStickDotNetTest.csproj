@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="AdHocTesting.cs" />
     <Compile Include="BlinkStickTests.cs" />
+    <Compile Include="ColorExtensionsTests.cs" />
     <Compile Include="MorseCodeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
